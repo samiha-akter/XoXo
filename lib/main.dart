@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        // Disable debug banner
       ),
       home: SplashScreen(),
     );
@@ -46,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   Future<void> _playSplashSound() async {
-    await _audioPlayer!.play(AssetSource('sounds/splash_sound.mp3')); // Add your sound file
+    await _audioPlayer!.play(AssetSource('assests/sounds/splash_sound.mp3'));
   }
 
   @override
@@ -176,7 +175,7 @@ class HowToPlayPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Text(
           'Rules:\n\n1. The game is played on a 3x3 grid.\n2. Player 1 is X, and Player 2 is O.\n3. Players take turns to mark a cell.\n4. The first player to get 3 of their marks in a row (horizontally, vertically, or diagonally) wins.\n5. If all cells are filled without a winner, the game is a draw.\n\nHave fun!',
-          style: TextStyle(color: Colors.white, fontSize: 24),
+          style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       ),
     );
@@ -218,19 +217,19 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
           GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 8.0, // Space between cells
-              mainAxisSpacing: 8.0, // Space between cells
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
             ),
             itemCount: 9,
             shrinkWrap: true,
-            padding: EdgeInsets.all(16.0), // Padding around the grid
+            padding: EdgeInsets.all(16.0),
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () => _handleTap(index),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12), // Rounded edges
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
                     child: Text(
@@ -261,7 +260,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         _board[index] = _currentPlayer;
         if (_checkGameOver()) {
           _isGameOver = true;
-          _playSound('lose_sound.mp3'); // Add your sound file
+          _playSound('splash_sound.mp3');
           Future.delayed(Duration(seconds: 4), () {
             Navigator.pop(context);
           });
@@ -276,7 +275,6 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   }
 
   bool _checkGameOver() {
-    // Check rows, columns, and diagonals for a winner
     for (int i = 0; i < 3; i++) {
       if (_board[i * 3] != '' &&
           _board[i * 3] == _board[i * 3 + 1] &&
@@ -304,6 +302,19 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
     return false;
   }
+  int? _findBestMove(String player) {
+    for (int i = 0; i < _board.length; i++) {
+      if (_board[i] == '') {
+        _board[i] = player;
+        if (_checkWinner() == player) {
+          _board[i] = '';
+          return i;
+        }
+        _board[i] = '';
+      }
+    }
+    return null;
+  }
 
   void _aiMove() {
     List<int> emptyIndices = [];
@@ -312,15 +323,27 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         emptyIndices.add(i);
       }
     }
-    if (emptyIndices.isNotEmpty) {
-      int move = emptyIndices[Random().nextInt(emptyIndices.length)];
+
+
+    int? move = _findBestMove('O');
+    if (move == null) {
+      move = _findBestMove('X');
+    }
+
+
+    if (move == null && emptyIndices.isNotEmpty) {
+      move = emptyIndices[Random().nextInt(emptyIndices.length)];
+    }
+
+
+    if (move != null) {
       setState(() {
-        _board[move] = 'O';
+        _board[move!] = 'O';
         _currentPlayer = 'X';
         if (_checkGameOver()) {
           _isGameOver = true;
-          _playSound('lose_sound.mp3'); // Add your sound file
-          Future.delayed(Duration(seconds: 4), () {
+          _playSound('lose_sound.mp3');
+          Future.delayed(Duration(seconds: 3), () {
             Navigator.pop(context);
           });
         }
@@ -328,8 +351,9 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
   }
 
+
   String _checkWinner() {
-    // Implement logic to determine winner
+
     for (int i = 0; i < 3; i++) {
       if (_board[i * 3] != '' &&
           _board[i * 3] == _board[i * 3 + 1] &&
@@ -356,6 +380,6 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   }
 
   Future<void> _playSound(String fileName) async {
-    await _audioPlayer!.play(AssetSource('../assests/sounds/$fileName')); // Add your sound file
+    await _audioPlayer!.play(AssetSource('../assests/sounds/$fileName'));
   }
 }
