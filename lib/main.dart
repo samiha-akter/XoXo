@@ -110,7 +110,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF468585),
+      backgroundColor: Color(0xFFE3FEF7),
       body: Column(
         children: <Widget>[
           SizedBox(height: 30),
@@ -122,10 +122,17 @@ class HomePage extends StatelessWidget {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => HowToPlayPage()));
               },
               style: TextButton.styleFrom(
-                foregroundColor: Colors.white, // Text color
+                foregroundColor: Color(0xFF135D66) // Text color
               ),
               child: Text('How to Play', style: TextStyle(fontSize: 24),),
             ),
+          ),
+          SizedBox(height: 80),
+          // Add the icon here
+          Image.asset(
+            'assests/ass.png',
+            height: 100, // Adjust the height
+            width: 100,  // Adjust the width
           ),
 
           Expanded(
@@ -141,7 +148,7 @@ class HomePage extends StatelessWidget {
                       foregroundColor: Colors.white, backgroundColor: Color(0xFF135D66),
                       // Text color
                     ),
-                    child: Text('Two Player', style: TextStyle(fontSize: 30),),
+                    child: Text('Two Player', style: TextStyle(fontSize: 24),),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -151,7 +158,7 @@ class HomePage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white, backgroundColor: Color(0xFF135D66), // Text color
                     ),
-                    child: Text('One Player', style: TextStyle(fontSize: 30),),
+                    child: Text('One Player', style: TextStyle(fontSize: 24),),
                   ),
                 ],
               ),
@@ -163,25 +170,83 @@ class HomePage extends StatelessWidget {
   }
 }
 
+
 class HowToPlayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF468585),
+      backgroundColor: Color(0xFFE3FEF7),
       appBar: AppBar(
-        backgroundColor: Color(0xFF468585),
-        title: Text('How to Play', style: TextStyle(color: Colors.white),),
+        backgroundColor: Color(0xFFE3FEF7),
+        title: Text('How to Play', style: TextStyle(color: Color(0xFF135D66), fontWeight: FontWeight.bold),),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          'Rules:\n\n1. The game is played on a 3x3 grid.\n2. Player 1 is X, and Player 2 is O.\n3. Players take turns to mark a cell.\n4. The first player to get 3 of their marks in a row (horizontally, vertically, or diagonally) wins.\n5. If all cells are filled without a winner, the game is a draw.\n\nHave fun!',
-          style: TextStyle(color: Colors.white, fontSize: 18),
+      body: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Rules:\n\n',
+                  style: TextStyle(
+                    color: Color(0xFF135D66),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextSpan(
+                  text: '1. The game is played on a 3x3 grid.\n',
+                  style: TextStyle(
+                    color: Color(0xFF135D66),
+                    fontSize: 18,
+
+                  ),
+                ),
+                TextSpan(
+                  text: '2. Player 1 is X, and Player 2 is O.\n',
+                  style: TextStyle(
+                    color: Color(0xFF135D66),
+                    fontSize: 18,
+                  ),
+                ),
+                TextSpan(
+                  text: '3. Players take turns to mark a cell.\n',
+                  style: TextStyle(
+                    color: Color(0xFF135D66),
+                    fontSize: 18,
+                  ),
+                ),
+                TextSpan(
+                  text: '4. The first player to get 3 of their marks in a row (horizontally, vertically, or diagonally) wins.\n',
+                  style: TextStyle(
+                    color: Color(0xFF135D66),
+                    fontSize: 18,
+                  ),
+                ),
+                TextSpan(
+                  text: '5. If all cells are filled without a winner, the game is a draw.\n\n',
+                  style: TextStyle(
+                    color: Color(0xFF135D66),
+                    fontSize: 18,
+                  ),
+                ),
+                TextSpan(
+                  text: 'HAVE FUN!',
+                  style: TextStyle(
+                    color: Color(0xFF135D66),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 }
+
 
 class TicTacToeGame extends StatefulWidget {
   final bool isSinglePlayer;
@@ -246,10 +311,11 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                _checkWinner() + ' wins!',
+                _checkWinner() == 'Draw' ? 'DRAW!!!' : '${_checkWinner()} wins!',
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
+
         ],
       ),
     );
@@ -354,7 +420,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
 
   String _checkWinner() {
-
+    // Check rows and columns
     for (int i = 0; i < 3; i++) {
       if (_board[i * 3] != '' &&
           _board[i * 3] == _board[i * 3 + 1] &&
@@ -367,6 +433,8 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         return _board[i];
       }
     }
+
+    // Check diagonals
     if (_board[0] != '' &&
         _board[0] == _board[4] &&
         _board[0] == _board[8]) {
@@ -377,8 +445,13 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         _board[2] == _board[6]) {
       return _board[2];
     }
-    return 'Draw';
+    if (!_board.contains('')) {
+      return 'Draw';
+    }
+
+    return '';
   }
+
 
   Future<void> _playSound(String fileName) async {
     await _audioPlayer!.play(AssetSource('../assests/sounds/$fileName'));

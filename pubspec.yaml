@@ -19,3 +19,4 @@ flutter:
   assets:
      - assests/sounds/splash_sound.mp3
      - assests/sounds/lose_sound.mp3
+     - assests/ass.png
