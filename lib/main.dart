@@ -138,9 +138,10 @@ class HomePage extends StatelessWidget {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => TicTacToeGame(isSinglePlayer: false)));
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color(0xFF50B498), // Text color
+                      foregroundColor: Colors.white, backgroundColor: Color(0xFF135D66),
+                      // Text color
                     ),
-                    child: Text('Two Player', style: TextStyle(fontSize: 24),),
+                    child: Text('Two Player', style: TextStyle(fontSize: 30),),
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -148,9 +149,9 @@ class HomePage extends StatelessWidget {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => TicTacToeGame(isSinglePlayer: true)));
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color(0xFF50B498), // Text color
+                      foregroundColor: Colors.white, backgroundColor: Color(0xFF135D66), // Text color
                     ),
-                    child: Text('One Player', style: TextStyle(fontSize: 24),),
+                    child: Text('One Player', style: TextStyle(fontSize: 30),),
                   ),
                 ],
               ),
@@ -342,8 +343,8 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         _currentPlayer = 'X';
         if (_checkGameOver()) {
           _isGameOver = true;
-          _playSound('lose_sound.mp3');
-          Future.delayed(Duration(seconds: 3), () {
+          _playSound('splash_sound.mp3');
+          Future.delayed(Duration(seconds: 2), () {
             Navigator.pop(context);
           });
         }
